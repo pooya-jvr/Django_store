@@ -13,7 +13,7 @@ class UserCreationForm(forms.ModelForm):
 
     def clean_password2(self):
         cd = self.cleaned_data
-        if cd['oassword1'] and cd['password2'] and cd['password1'] != cd['password2']:
+        if cd['password1'] and cd['password2'] and cd['password1'] != cd['password2']:
             raise ValidationError('password dont match')
         return cd['password2']
 

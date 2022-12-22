@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'home.apps.HomeConfig',
     'accounts.apps.AccountsConfig',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -121,6 +122,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
+MEDIA_URL ='/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -128,3 +133,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 AUTH_USER_MODEL = 'accounts.User'
+
+
+
+
+#clude
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_ACCESS_KEY_ID = '56d8bd56-de8b-49ce-8114-0955fc736b83'
+AWS_SECRET_ACCESS_KEY = 'df52c3c0df6805c91590051ab21d44aa065e03bf'
+AWS_S3_ENDPOINT_URL = 'https://pooya-store.s3.ir-thr-at1.arvanstorage.com'
+AWS_STORAGE_BUCKET_NAME = 'pooya-store'
+AWS_SERVICE_NAME = 's3'
+AWS_S3_FILE_OVERWRITE = False

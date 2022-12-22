@@ -3,5 +3,12 @@
 
 
 {% block content %}
-    <p>Hello Django</p>
+    {% for products in product %}
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="{{ products.image.url }}" alt="Card image cap">
+            <div class="card-body">
+                <a href="{{ products.get_absolute_url }}" class="card-title">{{ products.name }}</a>
+            </div>
+        </div>
+    {% endfor %}
 {% endblock %}

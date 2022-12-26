@@ -6,8 +6,8 @@ from .models import Product
 class HomeView(View):
 
     def get(self, request):
-        product = Product.objects.filter(available=True)
-        return render(request, 'home/index.html', {'product':product})
+        products = Product.objects.filter(available=True)
+        return render(request, 'home/index.html', {'products':products})
 
 
 class ProductDetailView(View):

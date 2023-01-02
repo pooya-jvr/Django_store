@@ -8,7 +8,7 @@ celery_app = Celery('Store')
 
 celery_app.autodiscover_tasks()
 
-celery_app.conf.broker_url = 'amqp://rabbitmq'
+celery_app.conf.broker_url = 'amqp://'
 
 celery_app.conf.result_backend = 'rpc://'
 

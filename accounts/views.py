@@ -5,7 +5,7 @@ import random
 from utils import send_otp_code
 from .models import User, OtpCode
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth import authenticate, login, logout
 
 class UserRegisterView(View):

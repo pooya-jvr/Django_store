@@ -59,3 +59,9 @@ class UserRegistrationForm(forms.Form):
 
 class VerifyCodeForm(forms.Form):
     code = forms.IntegerField() 
+
+
+
+class UserLoginForm(forms.Form):
+    phone_number = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput)

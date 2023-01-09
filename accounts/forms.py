@@ -54,6 +54,7 @@ class UserRegistrationForm(forms.Form):
         user = User.objects.filter(phone_number=phone).exists()
         if user:
             raise ValidationError('This phone number already exists')
+        # OtpCode.objects.filter(phone_number=phone).delete()
         return phone
 
 

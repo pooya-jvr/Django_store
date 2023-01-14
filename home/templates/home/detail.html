@@ -3,6 +3,6 @@
 
 {% block content %}
     <h2>{{ product.name }}</h2> <h4>{{ product.price }}</h4>
-    <img class="card-img-top" src="{{ product.image.url }}" alt="Card image cap">
+    <img class="card-img-top" src="{{ product.image.url }}" alt="Card image cap" style="width: 300px;">
     <small>{{ product.created }}</small>
     {% endblock %}

@@ -4,5 +4,13 @@
 {% block content %}
     <h2>{{ product.name }}</h2> <h4>{{ product.price }}</h4>
     <img class="card-img-top" src="{{ product.image.url }}" alt="Card image cap" style="width: 300px;">
-    <small>{{ product.created }}</small>
+    <small>{{ product.created }}</small><br/><br/>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="add to cart">
+
+    </form>
+
     {% endblock %}

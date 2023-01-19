@@ -9,6 +9,7 @@ import boto3
 from django.conf import settings
 import logging
 from botocore.exceptions import ClientError
+from orders.forms import CardAddForm
 
 class HomeView(View):
 
@@ -25,7 +26,8 @@ class ProductDetailView(View):
     
     def get(self, request, slug):
         product = get_object_or_404(Product, slug = slug)
-        return render(request, 'home/detail.html', {'product':product})
+        form =CardAddForm()
+        return render(request, 'home/detail.html', {'product':product, 'form':form})
 
 
 class BucketHome(IsAdminUserMixin ,View):

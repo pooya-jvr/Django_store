@@ -6,7 +6,7 @@
     <img class="card-img-top" src="{{ product.image.url }}" alt="Card image cap" style="width: 300px;">
     <small>{{ product.created }}</small><br/><br/>
 
-    <form action="" method="post">
+    <form action="{% url 'orders:cart_add' product.id %}" method="post">
         {% csrf_token %}
         {{ form }}
         <input type="submit" value="add to cart">

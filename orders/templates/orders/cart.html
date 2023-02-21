@@ -10,6 +10,7 @@
             <th scope="col">quantity</th>
             <th scope="col">unit price</th>
             <th scope="col">total price</th>
+            <th scope="col">Remove</th>
         </tr>
         </thead>
         <tbody>
@@ -20,8 +21,15 @@
             <td>{{ item.quantity }}</td>
             <td>{{ item.price }}</td>
             <td>{{ item.total_price }}</td>
+            <td><a href="">remove</a></td>
         </tr>
         {% endfor %}
+
+        <tr>
+            <td>Total</td>
+            <td colspan="4"></td>
+            <td>{{ cart.get_total_price }}</td>
+        </tr>
         </tbody>
     </table>
 

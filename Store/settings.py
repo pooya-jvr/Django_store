@@ -156,5 +156,3 @@ AWS_LOCAL_STORAGE = f'{BASE_DIR}/aws/'
 MERCHANT = "0aafdf01-519a-4187-819d-9166e004b238"
 
 SANDBOX = True
-
-'hello world'

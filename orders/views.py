@@ -60,7 +60,7 @@ if settings.SANDBOX:
 else:
     sandbox = 'www'
 
-\
+
 
 ZP_API_REQUEST = f"https://{sandbox}.zarinpal.com/pg/rest/WebGate/PaymentRequest.json"
 ZP_API_VERIFY = f"https://{sandbox}.zarinpal.com/pg/rest/WebGate/PaymentVerification.json"
@@ -70,26 +70,53 @@ description = "توضیحات مربوط به تراکنش را در این قس
 # Optional
 # Important: need to edit for realy server.
 CallbackURL = 'http://127.0.0.1:8080/orders/verify/'
-Amount = Order.get_total_price
+Amount = str(Order.get_total_price)
 class OrderPayView(LoginRequiredMixin, View):
     def get(self, request, order_id):
         order = Order.objects.get(id=order_id)
-        Phone = request.user.phone_number
+        request.session['orderpay'] = {
+            'order_id' : order_id
+                    }
         data = {
             "MerchantID": settings.MERCHANT,
             "Amount": Amount,
             "Description": description,
-            "Phone": Phone,
             "CallbackURL": CallbackURL,
         }
-        header = {"accept": "application/json", "content-type": "application/json'"}
+        headers = {"accept": "application/json", "content-type": "application/json"}
 
-        data = requests.post(url=ZP_API_REQUEST, data=json.dumps(data), headers=header)
+        req = requests.post(url=ZP_API_REQUEST, data=json.dumps(data), headers=headers)
             
-        authority = data.json()['data']['authority']
+        authority = req.json()['data']['authority']
         if len(data.json()['errors']) == 0:
                 return redirect(ZP_API_STARTPAY.format(authority=authority))
         else:
                 e_code = data.json()['errors']['code']
                 e_message = data.json()['errors']['message']
                 return HttpResponse(f"Error code: {e_code}, Error Message: {e_message}")
+
+
+
+
+class OrderVerifyView(LoginRequiredMixin, View):
+
+    def get(self, request, authority):
+        order_id = request.session['order_pay']['ordeer_id']
+        order = Order.objects.get(id=int(order_id))
+        data = {
+            "MerchantID": settings.MERCHANT,
+            "Amount": Amount,
+            "Authority": authority,
+                }
+        data = json.dumps(data)
+        # set content length by data
+        headers = {'content-type': 'application/json', 'content-length': str(len(data)) }
+        response = requests.post(ZP_API_VERIFY, data=data,headers=headers)
+
+        if response.status_code == 200:
+            response = response.json()
+            if response['Status'] == 100:
+                return {'status': True, 'RefID': response['RefID']}
+            else:
+                return {'status': False, 'code': str(response['Status'])}
+        return response

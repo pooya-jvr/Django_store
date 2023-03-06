@@ -16,6 +16,8 @@ class Category(models.Model):
         return self.name
 
 
+
+
     def get_absolute_url(self):
         return reverse('home:category_filter', args=[self.slug,])
 

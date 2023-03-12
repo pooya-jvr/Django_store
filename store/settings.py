@@ -56,7 +56,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'Store.urls'
+ROOT_URLCONF = 'store.urls'
 
 TEMPLATES = [
     {
@@ -75,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Store.wsgi.application'
+WSGI_APPLICATION = 'store.wsgi.application'
 
 
 # Database
@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'Store.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'store',
+        'NAME': 'django_store',
         'USER': 'postgres',
         'PASSWORD':'postgres',
         'HOST':'127.0.0.1',
@@ -92,12 +92,12 @@ DATABASES = {
     }
 }
 
-CACHES = {
-    'default' : {
-        'BACKEND':'django.core.backends.redis.RedisCache',
-        'LOCATION':'redis://127.0.0.1:6379'
-    }
-}
+# CACHES = {
+#     'default' : {
+#         'BACKEND':'django.core.backends.redis.RedisCache',
+#         'LOCATION':'redis://127.0.0.1:6379'
+#     }
+# }
 
 
 SESSION_ENGINE = 'django.contrib.sessions.backend.cache'

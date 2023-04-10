@@ -56,7 +56,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'Store.urls'
+ROOT_URLCONF = 'store.urls'
 
 TEMPLATES = [
     {
@@ -75,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Store.wsgi.application'
+WSGI_APPLICATION = 'store.wsgi.application'
 
 
 # Database
@@ -84,7 +84,11 @@ WSGI_APPLICATION = 'Store.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
+<<<<<<< HEAD:Store/settings.py
         'NAME': 'django_store',
+=======
+        'NAME': 'store_db',
+>>>>>>> 841f945:store/settings.py
         'USER': 'postgres',
         'PASSWORD':'postgres',
         'HOST':'127.0.0.1',
@@ -92,15 +96,24 @@ DATABASES = {
     }
 }
 
+<<<<<<< HEAD:Store/settings.py
 # CACHES = {
 #     'default' : {
 #         'BACKEND':'django.core.backends.redis.RedisCache',
 #         'LOCATION':'redis://127.0.0.1:6379'
 #     }
 # }
+=======
+CACHES = {
+    'default' : {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION':'redis://127.0.0.1:6379'
+    }
+}
+>>>>>>> 841f945:store/settings.py
 
 
-SESSION_ENGINE = 'django.contrib.sessions.backend.cache'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

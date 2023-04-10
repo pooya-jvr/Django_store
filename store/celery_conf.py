@@ -24,6 +24,4 @@ celery_app.conf.task_always_eager = False
 
 celery_app.conf.worker_prefetch_multiplier = 4
 
-
-
-
+#nice try

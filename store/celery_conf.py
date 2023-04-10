@@ -2,7 +2,7 @@ from celery import Celery
 from  datetime import timedelta
 import os
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Store.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'store.settings')
 
 celery_app = Celery('Store')
 

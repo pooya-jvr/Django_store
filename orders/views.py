@@ -14,71 +14,77 @@ from django.contrib import messages
 
 
 class CartView(View):
-
     def get(self, request):
         cart = Cart(request)
-        return render(request, 'orders/cart.html', {'cart':cart})
+        return render(request, "orders/cart.html", {"cart": cart})
+
 
 class CardAddView(View):
-    
     def post(self, request, product_id):
         cart = Cart(request)
-        product = get_object_or_404(Product, id = product_id)
+        product = get_object_or_404(Product, id=product_id)
         form = CardAddForm(request.POST)
         if form.is_valid():
-            cart.add(product, form.cleaned_data['quantity'])
-        return redirect('orders:cart')
-        
+            cart.add(product, form.cleaned_data["quantity"])
+        return redirect("orders:cart")
 
 
 class CartRemoveView(View):
     def get(self, request, product_id):
         cart = Cart(request)
-        product = get_object_or_404(Product, id = product_id)
+        product = get_object_or_404(Product, id=product_id)
         cart.remove(product)
-        return redirect('orders:cart')
+        return redirect("orders:cart")
 
 
 class OrderDetailView(LoginRequiredMixin, View):
     form_class = CouponApplyForm
+
     def get(self, request, order_id):
-        order = get_object_or_404(Order, id = order_id)
-        return render(request, 'orders/order.html', {'order':order, 'form':self.form_class})
+        order = get_object_or_404(Order, id=order_id)
+        return render(
+            request, "orders/order.html", {"order": order, "form": self.form_class}
+        )
 
 
 class OrderCreateView(LoginRequiredMixin, View):
-    
     def get(self, request):
         cart = Cart(request)
-        order = Order.objects.create(user = request.user)
+        order = Order.objects.create(user=request.user)
         for item in cart:
-            OrderItem.objects.create(order=order, product=item['product'], price=item['price'], quantity=item['quantity'])
+            OrderItem.objects.create(
+                order=order,
+                product=item["product"],
+                price=item["price"],
+                quantity=item["quantity"],
+            )
         cart.clear()
-        return redirect('orders:order_detail', order.id)
+        return redirect("orders:order_detail", order.id)
 
 
 if settings.SANDBOX:
-    sandbox = 'sandbox'
+    sandbox = "sandbox"
 else:
-    sandbox = 'www'
-
+    sandbox = "www"
 
 
 ZP_API_REQUEST = f"https://{sandbox}.zarinpal.com/pg/rest/WebGate/PaymentRequest.json"
-ZP_API_VERIFY = f"https://{sandbox}.zarinpal.com/pg/rest/WebGate/PaymentVerification.json"
+ZP_API_VERIFY = (
+    f"https://{sandbox}.zarinpal.com/pg/rest/WebGate/PaymentVerification.json"
+)
 ZP_API_STARTPAY = f"https://{sandbox}.zarinpal.com/pg/StartPay/"
 
 description = "توضیحات مربوط به تراکنش را در این قسمت وارد کنید"  # Required
 # Optional
 # Important: need to edit for realy server.
-CallbackURL = 'http://127.0.0.1:8080/orders/verify/'
+CallbackURL = "http://127.0.0.1:8080/orders/verify/"
 Amount = str(Order.get_total_price)
+
+
 class OrderPayView(LoginRequiredMixin, View):
     def get(self, request, order_id):
         order = Order.objects.get(id=order_id)
-        request.session['orderpay'] = {
-            'order_id' : order_id
-                    }
+        request.session["orderpay"] = {"order_id": order_id}
         data = {
             "MerchantID": settings.MERCHANT,
             "Amount": Amount,
@@ -88,39 +94,36 @@ class OrderPayView(LoginRequiredMixin, View):
         headers = {"accept": "application/json", "content-type": "application/json"}
 
         req = requests.post(url=ZP_API_REQUEST, data=json.dumps(data), headers=headers)
-            
-        authority = req.json()['data']['authority']
-        if len(data.json()['errors']) == 0:
-                return redirect(ZP_API_STARTPAY.format(authority=authority))
+
+        authority = req.json()["data"]["authority"]
+        if len(data.json()["errors"]) == 0:
+            return redirect(ZP_API_STARTPAY.format(authority=authority))
         else:
-                e_code = data.json()['errors']['code']
-                e_message = data.json()['errors']['message']
-                return HttpResponse(f"Error code: {e_code}, Error Message: {e_message}")
-
-
+            e_code = data.json()["errors"]["code"]
+            e_message = data.json()["errors"]["message"]
+            return HttpResponse(f"Error code: {e_code}, Error Message: {e_message}")
 
 
 class OrderVerifyView(LoginRequiredMixin, View):
-
     def get(self, request, authority):
-        order_id = request.session['order_pay']['ordeer_id']
+        order_id = request.session["order_pay"]["ordeer_id"]
         order = Order.objects.get(id=int(order_id))
         data = {
             "MerchantID": settings.MERCHANT,
             "Amount": Amount,
             "Authority": authority,
-                }
+        }
         data = json.dumps(data)
         # set content length by data
-        headers = {'content-type': 'application/json', 'content-length': str(len(data)) }
-        response = requests.post(ZP_API_VERIFY, data=data,headers=headers)
+        headers = {"content-type": "application/json", "content-length": str(len(data))}
+        response = requests.post(ZP_API_VERIFY, data=data, headers=headers)
 
         if response.status_code == 200:
             response = response.json()
-            if response['Status'] == 100:
-                return {'status': True, 'RefID': response['RefID']}
+            if response["Status"] == 100:
+                return {"status": True, "RefID": response["RefID"]}
             else:
-                return {'status': False, 'code': str(response['Status'])}
+                return {"status": False, "code": str(response["Status"])}
         return response
 
 
@@ -131,17 +134,18 @@ class CouponApplyView(LoginRequiredMixin, View):
         now = datetime.datetime.now()
         form = self.form_class(request.POST)
         if form.is_valid():
-            code = form.cleaned_data['code']
-            try :
-                coupon = Coupon.objects.get(code__exact = code, 
-                valid_from__lte = now, valid_to__gte = now, active = True)
+            code = form.cleaned_data["code"]
+            try:
+                coupon = Coupon.objects.get(
+                    code__exact=code,
+                    valid_from__lte=now,
+                    valid_to__gte=now,
+                    active=True,
+                )
             except Coupon.DoesNotExist:
-                messages.error(request, 'this coupon does not exist', 'danger')
-                return redirect('orders:order_detail', order_id)
-            order = Order.objects.get(id = order_id)
+                messages.error(request, "this coupon does not exist", "danger")
+                return redirect("orders:order_detail", order_id)
+            order = Order.objects.get(id=order_id)
             order.discount = coupon.discount
             order.save()
-            return redirect('orders:order_detail', order_id)
-
-
-
+            return redirect("orders:order_detail", order_id)

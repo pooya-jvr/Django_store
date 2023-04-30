@@ -12,9 +12,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'phone_number'
-    REQUIRED_FIELDS = ['email', 'full_name']
-
+    USERNAME_FIELD = "phone_number"
+    REQUIRED_FIELDS = ["email", "full_name"]
 
     def __str__(self):
         return self.email
@@ -30,5 +29,4 @@ class OtpCode(models.Model):
     created = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.phone_number} - {self.code} - {self.created}'
-
+        return f"{self.phone_number} - {self.code} - {self.created}"
